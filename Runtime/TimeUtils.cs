@@ -15,7 +15,7 @@ namespace Unity.AI.MLAgents
         public static void EnableFixedRateWithRepeat(ComponentSystemGroup group, float timeStep, int numberOfRepeat)
         {
             var manager = new FixedRateRepeatManager(timeStep, numberOfRepeat);
-            group.FixedRateManager = manager;
+            group.RateManager = manager;
         }
 
         /// <summary>
@@ -24,11 +24,11 @@ namespace Unity.AI.MLAgents
         /// <param name="group">The group whose UpdateCallback to set to null.</param>
         public static void DisableFixedRate(ComponentSystemGroup group)
         {
-            group.FixedRateManager = null;
+            group.RateManager = null;
         }
     }
 
-    internal class FixedRateRepeatManager : IFixedRateManager
+    internal class FixedRateRepeatManager : IRateManager
     {
         protected int m_NumberOfRepeat;
         protected int m_CurrentRepeat;

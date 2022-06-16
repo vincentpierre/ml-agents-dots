@@ -7,10 +7,23 @@ using Unity.Collections;
 using Unity.Physics;
 
 
+[GenerateAuthoringComponent]
+public struct BalanceBallSettings : IComponentData
+{
+    public Entity Ball;
+}
+
+// This is the data each agent (platform holds)
 public struct AgentData : IComponentData
 {
+
+    // Where to reset the ball after a success or a failure
     public float3 BallResetPosition;
+
+    // A reference to the ball entity the platform is trying to balance
     public Entity BallRef;
+
+    // For how many updates has the platform been balancing the ball
     public int StepCount;
 }
 
@@ -19,18 +32,27 @@ public struct Actuator : IComponentData
     public float2 Value;
 }
 
-public class BallSystem : JobComponentSystem
+public partial class BallSystem : SystemBase
 {
+    // If the platform maintained the ball for this many steps, it will be reset
     private const int maxStep = 1000;
+
+    // The platform will only update its action every `decisionPeriod` steps
     private const int decisionPeriod = 5;
+
+    // Used to keep track of the decisions period
     private int stepIndex = 0;
 
+    // This is an actuator job. It processes the decisions of the policy and updates
+    // the rotation of the platform
     private struct RotateJob : IActuatorJob
     {
         public ComponentDataFromEntity<Actuator> ComponentDataFromEntity;
         public void Execute(ActuatorEvent ev)
         {
+            // a is the continuous action provided by the policy
             var a = ev.GetContinuousAction<Actuator>();
+            // Add the Actuator struct to each agent Entity as a Component
             ComponentDataFromEntity[ev.Entity] = a;
         }
     }
@@ -39,23 +61,23 @@ public class BallSystem : JobComponentSystem
 
 
     // Update is called once per frame
-    protected override JobHandle OnUpdate(JobHandle inputDeps)
+    protected override void OnUpdate()
     {
-
-        if (!BallPolicy.IsCreated){
-            return inputDeps;
+        if (!BallPolicy.IsCreated)
+        {
+            return;
         }
         stepIndex++;
-        if (stepIndex % decisionPeriod == 0)
+        if (stepIndex % decisionPeriod != 0)
         {
-            return inputDeps;
+            return;
         }
 
         var policy = BallPolicy;
 
         ComponentDataFromEntity<Translation> TranslationFromEntity = GetComponentDataFromEntity<Translation>(isReadOnly: false);
         ComponentDataFromEntity<PhysicsVelocity> VelFromEntity = GetComponentDataFromEntity<PhysicsVelocity>(isReadOnly: false);
-        inputDeps = Entities
+        Entities
         .WithNativeDisableParallelForRestriction(TranslationFromEntity)
         .WithNativeDisableParallelForRestriction(VelFromEntity)
         .ForEach((Entity entity, ref Rotation rot, ref AgentData agentData) =>
@@ -111,21 +133,19 @@ public class BallSystem : JobComponentSystem
             }
             agentData.StepCount++;
 
-        }).Schedule(inputDeps);
+        }).ScheduleParallel();
 
         var reactiveJob = new RotateJob
         {
             ComponentDataFromEntity = GetComponentDataFromEntity<Actuator>(isReadOnly: false)
         };
-        inputDeps = reactiveJob.Schedule(policy, inputDeps);
+        Dependency = reactiveJob.Schedule(policy, Dependency);
 
-        inputDeps = Entities.ForEach((ref Actuator act, ref Rotation rotation) =>
+        Entities.ForEach((ref Actuator act, ref Rotation rotation) =>
         {
             var rot = math.mul(rotation.Value, quaternion.Euler(0.05f * new float3(act.Value.x, 0, act.Value.y)));
             rotation.Value = rot;
-        }).Schedule(inputDeps);
-
-        return inputDeps;
+        }).ScheduleParallel();
     }
 
     protected override void OnDestroy()

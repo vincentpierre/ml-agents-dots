@@ -26,10 +26,12 @@ public class BalanceBallManager : MonoBehaviour
 
     void Awake()
     {
+        // This section is creating the policy and passing it to BallSystem
         var policy = MyPolicySpecs.GetPolicy();
         var ballSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<BallSystem>();
         ballSystem.Enabled = true;
         ballSystem.BallPolicy = policy;
+        // The rest of the code spawns the platforms and the balls
 
         manager = World.DefaultGameObjectInjectionWorld.EntityManager;
 
@@ -42,12 +44,12 @@ public class BalanceBallManager : MonoBehaviour
 
         Academy.Instance.OnEnvironmentReset = () =>
         {
-            foreach(Entity e in entitiesP)
+            foreach (Entity e in entitiesP)
             {
                 manager.DestroyEntity(e);
             }
             entitiesP.Dispose();
-            foreach(Entity e in entitiesB)
+            foreach (Entity e in entitiesB)
             {
                 manager.DestroyEntity(e);
             }
@@ -85,11 +87,12 @@ public class BalanceBallManager : MonoBehaviour
                     Value = quaternion.EulerXYZ(valX, 0, valZ)
                 });
             manager.AddComponent<AgentData>(entitiesP[i]);
-            manager.SetComponentData(entitiesP[i], new AgentData { 
+            manager.SetComponentData(entitiesP[i], new AgentData
+            {
                 BallResetPosition = position + new float3(0, 0.2f, 0),
                 BallRef = entitiesB[i],
                 StepCount = 0
-             });
+            });
             manager.AddComponent<Actuator>(entitiesP[i]);
             currentIndex++;
         }

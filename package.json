@@ -6,35 +6,35 @@
   "description": "Add interactivity to your game with ML-Agents trained using Deep Reinforcement Learning.",
   "dependencies": {
     "com.unity.barracuda": "2.0.0-pre.3",
-    "com.unity.entities": "0.7.0-preview.19",
-    "com.unity.jobs": "0.2.6-preview.13",
-    "com.unity.mathematics": "1.1.0",
-    "com.unity.collections": "0.6.0-preview.9"
+    "com.unity.entities": "0.50.1-preview.2",
+    "com.unity.jobs": "0.50.0-preview.9",
+    "com.unity.mathematics": "1.2.5",
+    "com.unity.collections": "1.2.3"
   },
   "samples": [
     {
-      "displayName":"3DBall",
+      "displayName": "3DBall",
       "description": "A thousands platforms trying to balance a ball",
       "createSeparatePackage": false,
-      "path":"Samples~/3DBall"
+      "path": "Samples~/3DBall"
     },
     {
-      "displayName":"Basic",
+      "displayName": "Basic",
       "description": "Example of a MonoBehavior example integrated with the package",
       "createSeparatePackage": false,
-      "path":"Samples~/Basic"
+      "path": "Samples~/Basic"
     },
     {
-      "displayName":"String Side Channel",
+      "displayName": "String Side Channel",
       "description": "An example of how to create and register side channels for communication with Python",
       "createSeparatePackage": false,
-      "path":"Samples~/StringSideChannel"
+      "path": "Samples~/StringSideChannel"
     },
     {
-      "displayName":"Push The Block",
+      "displayName": "Push The Block",
       "description": "An example of an Agent learning to push a block in a goal zone",
       "createSeparatePackage": false,
-      "path":"Samples~/PushBlock"
+      "path": "Samples~/PushBlock"
     }
   ]
 }
