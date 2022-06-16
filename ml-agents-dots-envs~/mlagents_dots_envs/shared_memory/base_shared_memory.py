@@ -21,7 +21,6 @@ class BaseSharedMemory(ABC):
         :int size: When creating the file, specifies its length in bytes
         """
         directory = os.path.join(tempfile.gettempdir(), self.DIRECTORY)
-        print(directory)
         if not os.path.exists(directory):
             os.makedirs(directory)
         file_path = os.path.join(directory, file_name)
