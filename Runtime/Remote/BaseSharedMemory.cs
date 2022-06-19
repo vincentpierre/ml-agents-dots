@@ -68,7 +68,7 @@ namespace Unity.AI.MLAgents
         /// <returns></returns>
         public int GetInt(ref int offset)
         {
-            var result =  m_Accessor.ReadInt32(offset);
+            var result = m_Accessor.ReadInt32(offset);
             offset += 4;
             return result;
         }
@@ -196,7 +196,7 @@ namespace Unity.AI.MLAgents
         {
             var length = m_Accessor.ReadSByte(offset);
             var bytes = new byte[length];
-            offset +=  1;
+            offset += 1;
             m_Accessor.ReadArray(offset, bytes, 0, length);
             return Encoding.ASCII.GetString(bytes);
         }

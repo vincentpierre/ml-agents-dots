@@ -21,7 +21,7 @@ namespace Unity.AI.MLAgents
     [Serializable]
     public struct PolicySpecs
     {
-        #pragma warning disable CS0649
+#pragma warning disable CS0649
         [SerializeField] private string m_Name;
 
         [SerializeField] private PolicyProcessorType m_PolicyProcessorType;

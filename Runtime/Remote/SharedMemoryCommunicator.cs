@@ -9,7 +9,7 @@ namespace Unity.AI.MLAgents
 {
     internal unsafe class SharedMemoryCommunicator : IDisposable
     {
-        private const float k_TimeOutInSeconds = 15000;
+        private const float k_TimeOutInSeconds = 5;
 
 
         private string m_BaseFileName;
