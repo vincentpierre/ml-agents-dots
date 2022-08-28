@@ -137,7 +137,7 @@ namespace Unity.AI.MLAgents
                 {
                     if (1e-7 * (DateTime.Now.Ticks - t0) > k_TimeOutInSeconds)
                     {
-                        Debug.LogError("Timeout");
+                        Debug.LogError("ML-Agents Timeout");
                         Active = false;
                         m_SharedMemoryHeader.Delete();
                         m_ShareMemoryBody.Delete();
@@ -148,7 +148,7 @@ namespace Unity.AI.MLAgents
             }
             if (!m_SharedMemoryHeader.Active)
             {
-                Debug.LogError("Communication was closed.");
+                Debug.LogError("ML-Agents Communication was closed.");
                 Active = false;
                 m_SharedMemoryHeader.Delete();
                 m_ShareMemoryBody.Delete();

@@ -166,7 +166,7 @@ namespace Unity.AI.MLAgents.SideChannels
                 else
                 {
                     Debug.Log(string.Format(
-                        "Unknown side channel data received. Channel Id is "
+                        "ML-Agents: Unknown side channel data received. Channel Id is "
                         + ": {0}", cachedMessage.ChannelId));
                 }
             }

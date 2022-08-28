@@ -61,7 +61,7 @@ namespace Unity.AI.MLAgents.SideChannels
                     break;
                 default:
                     Debug.LogWarning(
-                        "Unknown engine configuration received from Python. Make sure" +
+                        "ML-Agents : Unknown engine configuration received from Python. Make sure" +
                         " your Unity and Python versions are compatible.");
                     break;
             }

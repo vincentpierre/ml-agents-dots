@@ -50,7 +50,7 @@ namespace Unity.AI.MLAgents.SideChannels
             }
             else
             {
-                Debug.LogWarning("EnvironmentParametersChannel received an unknown data type.");
+                Debug.LogWarning("ML-Agents EnvironmentParametersChannel received an unknown data type.");
             }
         }
 
