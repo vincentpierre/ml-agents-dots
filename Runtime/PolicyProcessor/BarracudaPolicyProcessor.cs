@@ -96,7 +96,7 @@ namespace Unity.AI.MLAgents
         System.Collections.Generic.List<float[]> obsArrays;
         float[] maskArrays;
 
-        public bool IsConnected {get {return false;}}
+        public bool IsConnected { get { return false; } }
 
         internal BarracudaPolicyProcessor(Policy policy, NNModel model, InferenceDevice inferenceDevice)
         {

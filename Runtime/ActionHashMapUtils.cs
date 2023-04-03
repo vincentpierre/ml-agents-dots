@@ -17,8 +17,8 @@ namespace Unity.AI.MLAgents
         /// <returns> A NativeHashMap from Entities to Actions with type T.</returns>
         public static void GenerateActionHashMap<TC, TD>(
             this Policy policy,
-            NativeHashMap<Entity, TC> continuousActionMap,
-            NativeHashMap<Entity, TD> discreteActionMap)
+            NativeParallelHashMap<Entity, TC> continuousActionMap,
+            NativeParallelHashMap<Entity, TD> discreteActionMap)
             where TC : struct
             where TD : struct
         {
@@ -70,7 +70,7 @@ namespace Unity.AI.MLAgents
         /// <returns> A NativeHashMap from Entities to Actions with type T.</returns>
         public static void GenerateContinuousActionHashMap<TC>(
             this Policy policy,
-            NativeHashMap<Entity, TC> continuousActionMap)
+            NativeParallelHashMap<Entity, TC> continuousActionMap)
             where TC : struct
         {
             int contSize = policy.ContinuousActionSize;
@@ -111,7 +111,7 @@ namespace Unity.AI.MLAgents
         /// <returns> A NativeHashMap from Entities to Actions with type T.</returns>
         public static void GenerateDiscreteActionHashMap<TD>(
             this Policy policy,
-            NativeHashMap<Entity, TD> discreteActionMap)
+            NativeParallelHashMap<Entity, TD> discreteActionMap)
             where TD : struct
         {
             int discSize = policy.DiscreteActionBranches.Length;
