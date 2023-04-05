@@ -35,8 +35,9 @@ public class BasicAgent : MonoBehaviour
         m_Entity = World.DefaultGameObjectInjectionWorld.EntityManager.CreateEntity();
         m_Policy = BasicSpecs.GetPolicy();
         m_DiscreteAction = new NativeHashMap<Entity, int>(1, Allocator.Persistent);
-        if (BasicSpecs.PolicyProcessorType == PolicyProcessorType.None){
-            m_Policy.RegisterPolicyWithHeuristic<float, int>(BasicSpecs.Name, discreteHeuristic:() => { return 1; });
+        if (BasicSpecs.PolicyProcessorType == PolicyProcessorType.None)
+        {
+            m_Policy.RegisterPolicyWithHeuristic<float, int>(BasicSpecs.Name, discreteHeuristic: () => { return 1; });
         }
 
         Academy.Instance.OnEnvironmentReset += BeginEpisode;
@@ -71,7 +72,7 @@ public class BasicAgent : MonoBehaviour
             .SetReward(-0.01f);
 
         // Get the action
-        m_Policy.GenerateDiscreteActionHashMap<int>(m_DiscreteAction);
+        m_Policy.UpdateDiscreteActionHashMap<int>(m_DiscreteAction);
         int action = 0;
         m_DiscreteAction.TryGetValue(m_Entity, out action);
 

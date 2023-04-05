@@ -68,7 +68,7 @@ namespace Unity.AI.MLAgents
         /// <typeparam name="T"> The type of the Action struct. It must match the Action Size
         /// and Action Type of the Policy.</typeparam>
         /// <returns> A NativeHashMap from Entities to Actions with type T.</returns>
-        public static void GenerateContinuousActionHashMap<TC>(
+        public static void UpdateContinuousActionHashMap<TC>(
             this Policy policy,
             NativeParallelHashMap<Entity, TC> continuousActionMap)
             where TC : struct
@@ -109,7 +109,7 @@ namespace Unity.AI.MLAgents
         /// <typeparam name="T"> The type of the Action struct. It must match the Action Size
         /// and Action Type of the Policy.</typeparam>
         /// <returns> A NativeHashMap from Entities to Actions with type T.</returns>
-        public static void GenerateDiscreteActionHashMap<TD>(
+        public static void UpdateDiscreteActionHashMap<TD>(
             this Policy policy,
             NativeParallelHashMap<Entity, TD> discreteActionMap)
             where TD : struct

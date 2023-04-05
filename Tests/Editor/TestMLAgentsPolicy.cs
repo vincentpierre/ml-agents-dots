@@ -131,11 +131,11 @@ namespace Unity.AI.MLAgents.Tests.Editor
                 .SetReward(1f);
 
             var hashMap = new NativeHashMap<Entity, DiscreteAction_TWO_THREE>(20, Allocator.Temp);
-            policy.GenerateDiscreteActionHashMap<DiscreteAction_TWO_THREE>(hashMap);
+            policy.UpdateDiscreteActionHashMap<DiscreteAction_TWO_THREE>(hashMap);
             Assert.True(hashMap.TryGetValue(entity, out _));
 
             policy.EndEpisode(entity);
-            policy.GenerateDiscreteActionHashMap<DiscreteAction_TWO_THREE>(hashMap);
+            policy.UpdateDiscreteActionHashMap<DiscreteAction_TWO_THREE>(hashMap);
             Assert.False(hashMap.TryGetValue(entity, out _));
             hashMap.Dispose();
 

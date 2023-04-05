@@ -124,7 +124,7 @@ Another way to retrieve actions is to use the `ActionHashMapUtils` as follows :
 // Create hash map from entities to actions (here for discrete actions)
 m_DiscreteAction = new NativeHashMap<Entity, ActionStruct>(1, Allocator.Persistent);
 // Update the hash map with the actions (This will remove the actions from the policy)
-m_Policy.GenerateDiscreteActionHashMap<ActionStruct>(m_DiscreteAction);
+m_Policy.UpdateDiscreteActionHashMap<ActionStruct>(m_DiscreteAction);
 
 // You can then query the actions :
 ActionStruct action = new ActionStruct();
