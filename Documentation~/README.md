@@ -54,7 +54,8 @@ You can access the `Policy` in the main thread and use an inference model with i
 ```csharp
 var policy = new Policy(
   100,                              // The maximum number of agents that can request a decision per step
-  new int3[] { new int3(3, 0, 0) }, // The observation shapes (here, one observation of shape (3,0,0))
+  new int3[] { SensorShape.Vector(3),
+               SensorShape.Matrix(84, 84, 3) }, // The observation shapes 
   3,                                // The number of continuous actions
   new int[]{},                      // The discrete action branches (here none)
   );

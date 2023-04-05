@@ -351,7 +351,7 @@ namespace Unity.AI.MLAgents
             {
                 File.Delete(m_FilePath);
             }
-            catch (IOException e)
+            catch (IOException)
             {
                 // File could not be deleted
             }
