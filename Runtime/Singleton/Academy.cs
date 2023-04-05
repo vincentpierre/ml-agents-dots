@@ -131,7 +131,7 @@ namespace Unity.AI.MLAgents
 
                 m_PolicyToProcessor = new Dictionary<Policy, IPolicyProcessor>();
 
-                TryInitializeCommunicator();
+                InitializeCommunicator();
                 SideChannelManager.RegisterSideChannel(new EngineConfigurationChannel());
                 m_EnvironmentParameters = new EnvironmentParameters();
                 m_StatsRecorder = new StatsRecorder();
@@ -139,7 +139,7 @@ namespace Unity.AI.MLAgents
             }
         }
 
-        private void TryInitializeCommunicator()
+        private void InitializeCommunicator()
         {
             var path = ArgumentParser.ReadSharedMemoryPathFromArgs();
 
@@ -149,7 +149,7 @@ namespace Unity.AI.MLAgents
             }
             else
             {
-                m_Communicator = new SharedMemoryCommunicator(path);
+                m_Communicator = new SharedMemoryCommunicator(path, TimeoutWait: 15f);
                 if (!m_Communicator.Active)
                 {
                     m_Communicator = null;

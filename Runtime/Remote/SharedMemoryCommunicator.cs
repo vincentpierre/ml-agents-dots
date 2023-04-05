@@ -9,7 +9,7 @@ namespace Unity.AI.MLAgents
 {
     internal unsafe class SharedMemoryCommunicator : IDisposable
     {
-        private const float k_TimeOutInSeconds = 5;
+        private float m_TimeOutInSeconds = 60;
 
 
         private string m_BaseFileName;
@@ -19,8 +19,9 @@ namespace Unity.AI.MLAgents
 
         public bool Active;
 
-        public SharedMemoryCommunicator(string filePath)
+        public SharedMemoryCommunicator(string filePath, float TimeoutWait)
         {
+            m_TimeOutInSeconds = TimeoutWait;
             if (filePath == null)
             {
                 Active = false;
@@ -135,10 +136,11 @@ namespace Unity.AI.MLAgents
 #if UNITY_EDITOR
                 if (iteration % checkTimeoutIteration == 0)
                 {
-                    if (1e-7 * (DateTime.Now.Ticks - t0) > k_TimeOutInSeconds)
+                    if (1e-7 * (DateTime.Now.Ticks - t0) > m_TimeOutInSeconds)
                     {
                         Debug.LogError("ML-Agents Timeout");
                         Active = false;
+                        m_SharedMemoryHeader.Close();
                         m_SharedMemoryHeader.Delete();
                         m_ShareMemoryBody.Delete();
                         EditorApplication.isPlaying = false;

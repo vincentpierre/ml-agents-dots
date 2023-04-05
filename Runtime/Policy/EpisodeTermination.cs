@@ -15,11 +15,13 @@ namespace Unity.AI.MLAgents
     {
         private int m_Index;
         private Policy m_Policy;
+        private int m_ObservationIndex;
 
         internal EpisodeTermination(int index, Policy policy)
         {
             this.m_Index = index;
             this.m_Policy = policy;
+            this.m_ObservationIndex = 0;
         }
 
         /// <summary>
@@ -32,6 +34,17 @@ namespace Unity.AI.MLAgents
         {
             m_Policy.TerminationRewards[m_Index] = r;
             return this;
+        }
+
+        /// <summary>
+        /// Sets the observation for of the end of the Episode.
+        /// </summary>
+        /// <param name="sensor"> A struct strictly containing floats used as observation data </param>
+        /// <returns> The EpisodeTermination struct </returns>
+        public EpisodeTermination SetObservation<T>(T sensor) where T : struct
+        {
+            m_ObservationIndex += 1;
+            return this.SetObservation(m_ObservationIndex - 1, sensor);
         }
 
         /// <summary>
@@ -57,6 +70,17 @@ namespace Unity.AI.MLAgents
             var tmp = m_Policy.TerminationObs.Slice(start, inputSize).SliceConvert<T>();
             tmp[0] = sensor;
             return this;
+        }
+
+        /// <summary>
+        /// Sets the observation for a termination request using a categorical value.
+        /// </summary>
+        /// <param name="sensor"> An integer containing the index of the categorical observation </param>
+        /// <returns> The EpisodeTermination struct </returns>
+        public EpisodeTermination SetObservation(int sensor)
+        {
+            m_ObservationIndex += 1;
+            return this.SetObservation(m_ObservationIndex - 1, sensor);
         }
 
         /// <summary>
@@ -90,6 +114,17 @@ namespace Unity.AI.MLAgents
             }
             m_Policy.TerminationObs[start + sensor] = 1.0f;
             return this;
+        }
+
+        /// <summary>
+        /// Sets the last observation the Agent perceives before ending the episode.
+        /// </summary>
+        /// <param name="obs"> A NativeSlice of floats containing the observation data </param>
+        /// <returns> The EpisodeTermination struct </returns>
+        public EpisodeTermination SetObservationFromSlice([ReadOnly] NativeSlice<float> obs)
+        {
+            m_ObservationIndex += 1;
+            return this.SetObservationFromSlice(m_ObservationIndex - 1, obs);
         }
 
         /// <summary>

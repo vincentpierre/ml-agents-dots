@@ -1,11 +1,14 @@
 {
     "name": "Unity.AI.MLAgents",
+    "rootNamespace": "",
     "references": [
         "Unity.Entities",
         "Unity.Jobs",
         "Unity.Mathematics",
         "Unity.Collections",
-        "Unity.Barracuda"
+        "Unity.Barracuda",
+        "Unity.Physics",
+        "Unity.Transforms"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
