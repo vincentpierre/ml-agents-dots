@@ -8,7 +8,7 @@ public class BasicAgent : MonoBehaviour
     public PolicySpecs BasicSpecs;
     private Policy m_Policy;
     private Entity m_Entity;
-    private NativeHashMap<Entity, int> m_DiscreteAction;
+    private NativeParallelHashMap<Entity, int> m_DiscreteAction;
 
     public float timeBetweenDecisionsAtInference;
     float m_TimeSinceDecision;
@@ -34,7 +34,7 @@ public class BasicAgent : MonoBehaviour
     {
         m_Entity = World.DefaultGameObjectInjectionWorld.EntityManager.CreateEntity();
         m_Policy = BasicSpecs.GetPolicy();
-        m_DiscreteAction = new NativeHashMap<Entity, int>(1, Allocator.Persistent);
+        m_DiscreteAction = new NativeParallelHashMap<Entity, int>(1, Allocator.Persistent);
         if (BasicSpecs.PolicyProcessorType == PolicyProcessorType.None)
         {
             m_Policy.RegisterPolicyWithHeuristic<float, int>(BasicSpecs.Name, discreteHeuristic: () => { return 1; });

@@ -8,7 +8,8 @@ using Unity.Collections;
 
 
 
-public class BlockCollisionSystem : JobComponentSystem{
+partial class BlockCollisionSystem : SystemBase
+{
 
     [ReadOnly] BuildPhysicsWorld buildPhysicsWorldSystem;
     [ReadOnly] StepPhysicsWorld stepPhysicsWorldSystem;
@@ -18,36 +19,40 @@ public class BlockCollisionSystem : JobComponentSystem{
         buildPhysicsWorldSystem = World.GetOrCreateSystem<BuildPhysicsWorld>();
         stepPhysicsWorldSystem = World.GetOrCreateSystem<StepPhysicsWorld>();
     }
-    protected override JobHandle OnUpdate(JobHandle inputDeps) {
-        inputDeps = JobHandle.CombineDependencies(
-            inputDeps,
+    protected override void OnUpdate()
+    {
+        Dependency = JobHandle.CombineDependencies(
+            Dependency,
             stepPhysicsWorldSystem.FinalSimulationJobHandle);
 
-        buildPhysicsWorldSystem.AddInputDependency(inputDeps);
+        // buildPhysicsWorldSystem.AddInputDependency(Dependency);
 
         var ecb = new EntityCommandBuffer(Allocator.TempJob);
-        var triggerJob = new CollisionEventJob{
-                entityCommandBuffer = ecb,
-                BlockData = GetComponentDataFromEntity<Block>(isReadOnly : true),
-                AgentData = GetComponentDataFromEntity<PushBlockCube>(isReadOnly : false),
-            };
-        inputDeps = triggerJob.Schedule(
-                stepPhysicsWorldSystem.Simulation, ref buildPhysicsWorldSystem.PhysicsWorld, inputDeps);
-        inputDeps.Complete();
+        var triggerJob = new CollisionEventJob
+        {
+            entityCommandBuffer = ecb,
+            BlockData = GetComponentDataFromEntity<Block>(isReadOnly: true),
+            AgentData = GetComponentDataFromEntity<PushBlockCube>(isReadOnly: false),
+        };
+        Dependency = triggerJob.Schedule(
+                stepPhysicsWorldSystem.Simulation, Dependency);
+        Dependency.Complete();
         ecb.Playback(EntityManager);
         ecb.Dispose();
 
-        return inputDeps;
+        return;
     }
 
-    public struct CollisionEventJob : ITriggerEventsJob {
+    public struct CollisionEventJob : ITriggerEventsJob
+    {
 
         // This looks at all of the collisions of the block. There is probably a better way to do this
         public EntityCommandBuffer entityCommandBuffer;
         [ReadOnly] public ComponentDataFromEntity<Block> BlockData;
         public ComponentDataFromEntity<PushBlockCube> AgentData;
 
-        public void Execute(TriggerEvent triggerEvent){
+        public void Execute(TriggerEvent triggerEvent)
+        {
             Entity A = triggerEvent.EntityA;
             Entity B = triggerEvent.EntityB;
 
