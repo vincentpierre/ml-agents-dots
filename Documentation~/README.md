@@ -1,10 +1,9 @@
-## ML-Agents DOTS Installation Guide
-Please note that this package is available as a preview, so it is not ready for production use. The features and documentation in this package might change before it is verified for release.
+# ML-Agents DOTS 
 
 ## Installation
 
 ### Install C# code
- * Create a new Project on Unity 2020.2.0b14
+ * Create a new Project on Unity 2021.3.19f1
  * Navigate to the new created project folder and add the following entries into `Package/manifest.json` under "Dependencies":
  ```json
  "com.unity.ai.mlagents": "https://github.com/vincentpierre/ml-agents-dots.git",
@@ -15,18 +14,30 @@ Please note that this package is available as a preview, so it is not ready for 
 
 
 ### Install ML-Agents DOTS Python code
+#### From Github on Windows
+__(Note the escaped `&`)__
+```
+pip install git+https://github.com/vincentpierre/ml-agents-dots.git#egg=mlagents-dots-envs^&subdirectory=ml-agents-dots-envs~
+pip install git+https://github.com/vincentpierre/ml-agents-dots.git#egg=mlagents-dots-learn^&subdirectory=ml-agents-dots-learn~
+```
+#### From Github on Linux and Max
+```
+pip install git+https://github.com/vincentpierre/ml-agents-dots.git#egg=mlagents-dots-envs&subdirectory=ml-agents-dots-envs~
+pip install git+https://github.com/vincentpierre/ml-agents-dots.git#egg=mlagents-dots-learn&subdirectory=ml-agents-dots-learn~
+```
+#### From Source
  * Clone this repository in a new folder
  ```
  git clone https://github.com/vincentpierre/ml-agents-dots.git
  ```
  * Run the following commands inside the cloned repository in a virtual environment:
  ```
- pip3 install -e ./ml-agents-dots-envs~
- pip3 install -e ./ml-agents-dots-learn~
+ pip install -e ./ml-agents-dots-envs~
+ pip install -e ./ml-agents-dots-learn~
  ```
 
 
-## Train using 3DBall
+## Train an Environment
  * From the project window, open the Basic scene under `Assets\Samples\DOTS ML-Agents\0.X.0-preview\Basic\Scene\`
  * To start training, call
  ```
@@ -54,7 +65,7 @@ policy.SubscribePolicyWithBarracudaModel(Name, Model, InferenceDevice);
 The `Policy` can be accessed in a Unity Job in a parallel manner.  Here is an example of a job in which observation data is added to the policy :
 
 ```csharp
-public struct UserCreateSensingJob : IJobParallelFor
+public struct UserCreatedSensingJob : IJobParallelFor
     {
         public NativeArray<Entity> entities;
         public Policy policy;
@@ -74,7 +85,7 @@ The job can called using this code. Alternatively, you can use the `Entities.For
 ```csharp
 protected override JobHandle OnUpdate(JobHandle inputDeps)
 {
-    var job = new MyPopulationJob{
+    var job = new UserCreatedSensingJob{
 	    policy = myPolicy,
 	    entities = ...,
 	    sensors = ...,
@@ -88,8 +99,8 @@ Note that this API can also be called outside of a job and used in the main thre
 
 ```csharp
 var visObs = VisualObservationUtility.GetVisObs(camera, 84, 84, Allocator.TempJob);
+// Here camera is a UnityEngine.Camera, 84 is the width of the image (and height). This will generate a Native Array with the TempJob Allocator.
 policy.RequestDecision(entities[i])
-  .SetReward(1.0f)
   .SetObservationFromSlice(1, visObs.Slice());
 ```
 
@@ -105,7 +116,7 @@ public struct UserCreatedActionEventJob : IActuatorJob
         }
     }
 ```
-The ActuatorEvent data contains a key (here an entity) to identify the Agent and a `GetContinuousAction` and `GetDiscreteAction` methods to retrieve the data in the event.
+The ActuatorEvent data contains the Entity that requested the decision and a `GetContinuousAction` and `GetDiscreteAction` methods to retrieve the action data in the event.
 
 Another way to retrieve actions is to use the `ActionHashMapUtils` as follows :
 
@@ -120,7 +131,7 @@ ActionStruct action = new ActionStruct();
 m_DiscreteAction.TryGetValue(m_Entity, out action);
 ```
 
-Where `ActionStruct` is a user defined struct. This struct must contain only floats or float structs in the continuous case and only integers (or enums derived from integers) in the discrete case.
+Where `ActionStruct` is a user defined action struct. This struct must contain only floats or float structs in the continuous case and only integers (or enums derived from integers) in the discrete case. The HashMap becomes a mapping from Entities (the ones that requested decisions) and their actions.
 
 ## UI to create a Policy
 

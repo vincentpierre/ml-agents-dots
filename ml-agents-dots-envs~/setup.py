@@ -1,5 +1,7 @@
 from setuptools import setup, find_packages
 
+print(">>>>>>>>>>",find_packages())
+
 setup(
     name="mlagents_dots_envs",
     version="0.2.0-preview",
